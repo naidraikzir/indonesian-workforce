@@ -1,11 +1,34 @@
 <template>
-  <div class="map" ref="map"/>
+  <div
+    class="map"
+    ref="map"
+  />
 </template>
 
 <script>
 import mapboxgl from 'mapbox-gl';
 
 export default {
+  props: {
+    center: {
+      type: Object,
+      default: () => ({
+        latitude: 0,
+        longitude: 0,
+      }),
+      validator: value =>
+        value.hasOwnProperty('latitude') && value.hasOwnProperty('longitude'),
+    },
+    pitch: {
+      type: Number,
+      default: 0,
+    },
+    zoom: {
+      type: Number,
+      default: 3,
+    },
+  },
+
   data: () => ({
     map: null,
   }),
@@ -24,13 +47,14 @@ export default {
 
   methods: {
     mountMap() {
+      const { latitude, longitude } = this.center;
       mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN;
       this.map = new mapboxgl.Map({
         container: this.$refs.map,
         style: 'mapbox://styles/mapbox/streets-v11',
-        center: [116, -1],
-        pitch: 45,
-        zoom: 4.5,
+        center: [longitude, latitude],
+        pitch: this.pitch,
+        zoom: this.zoom,
       });
       this.map.addControl(new mapboxgl.NavigationControl());
       this.addBuildingsHeight();

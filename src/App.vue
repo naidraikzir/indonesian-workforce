@@ -1,6 +1,10 @@
 <template>
   <div>
-    <Map />
+    <Map
+      :center="center"
+      :pitch="pitch"
+      :zoom="zoom"
+    />
   </div>
 </template>
 
@@ -13,6 +17,15 @@ export default {
   components: {
     Map,
   },
+
+  data: () => ({
+    center: {
+      latitude: -1,
+      longitude: 119,
+    },
+    pitch: 45,
+    zoom: 4.5,
+  }),
 };
 </script>
 
