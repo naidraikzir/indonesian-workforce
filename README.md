@@ -1,5 +1,14 @@
 # data-map
 
+## Add `.env`
+Copy `.env.example` to `.env`
+
+## Mapbox Access Token
+Add your own Mapbox access token to `.env`:
+```
+MAPBOX_ACCESS_TOKEN=your_very_unique_access_token
+```
+
 ## Project setup
 ```
 npm install
@@ -7,7 +16,7 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production
