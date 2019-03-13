@@ -140,7 +140,7 @@ export default {
         zoom: 4.5,
         easing: t => t < 0.5
           ? 8 * t * t * t * t
-          : 1 - 8 * (--t) * t *  t * t,
+          : 1 - 8 * (--t) * t * t * t,
       });
     },
     addExtrusions() {
