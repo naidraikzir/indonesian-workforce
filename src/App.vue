@@ -1,12 +1,7 @@
 <template>
   <div>
     <h4>Persentase Tenaga Kerja Formal 2015 - 2018 Per Provinsi</h4>
-    <Map
-      :center="center"
-      :pitch="pitch"
-      :zoom="zoom"
-      :loadCallback="onMapLoad"
-    />
+    <Map :loadCallback="onMapLoad" />
     <select v-model="selectedYear">
       <option
         v-for="(year, y) of years"
@@ -16,11 +11,22 @@
         Tahun {{ year }}
       </option>
     </select>
+    <div
+      class="loader"
+      v-if="isLoading"
+    >
+      <ball-scale-multiple-loader
+        size="10em"
+        color="rgba(255, 255, 255, 0.75)"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import Papa from 'papaparse';
+import 'vue-loaders/dist/vue-loaders.css';
+import { BallScaleMultipleLoader } from 'vue-loaders';
 import Map from '@/components/Map';
 import workforce from '@/assets/workforce.csv';
 
@@ -32,15 +38,10 @@ export default {
 
   components: {
     Map,
+    BallScaleMultipleLoader,
   },
 
   data: () => ({
-    center: {
-      latitude: -1,
-      longitude: 119,
-    },
-    pitch: 45,
-    zoom: 4.5,
     years: [
       '2015',
       '2016',
@@ -52,6 +53,7 @@ export default {
     data: [],
     mapLoaded: false,
     dataBuilt: false,
+    isLoading: true,
   }),
 
   computed: {
@@ -63,7 +65,8 @@ export default {
   watch: {
     readyToDraw(val) {
       if (val) {
-        this.addExtrusions();
+        this.isLoading = false;
+        this.flyTo(this.addExtrusions);
       }
     },
     selectedYear(val) {
@@ -125,6 +128,20 @@ export default {
     onMapLoad(map) {
       this.map = map;
       this.mapLoaded = true;
+    },
+    flyTo(callback) {
+      this.map.on('moveend', callback);
+      this.map.flyTo({
+        center: {
+          lat: -1,
+          lon: 119,
+        },
+        pitch: 45,
+        zoom: 4.5,
+        easing: t => t < 0.5
+          ? 8 * t * t * t * t
+          : 1 - 8 * (--t) * t *  t * t,
+      });
     },
     addExtrusions() {
       this.map.addLayer({
@@ -191,5 +208,17 @@ select {
   box-shadow: 0 0.25em 1em -0.25em rgba(0, 0, 0, 0.5);
   border: 0;
   font-size: 1em;
+  transform: translateX(-50%);
+}
+
+.loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

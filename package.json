@@ -12,7 +12,8 @@
     "mapbox-gl": "^0.53.0",
     "papaparse": "^4.6.3",
     "register-service-worker": "^1.5.2",
-    "vue": "^2.6.6"
+    "vue": "^2.6.6",
+    "vue-loaders": "^2.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
